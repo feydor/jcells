@@ -2,7 +2,7 @@ package org.fffere.jcell.model;
 
 import java.util.function.Predicate;
 
-/** All eight neighboring points */
+/** All eight neighboring cells */
 public class Neighbors {
     private final Cell[] neighbors;
 
@@ -14,31 +14,24 @@ public class Neighbors {
     public Cell topleft() {
         return neighbors[0];
     }
-
     public Cell top() {
         return neighbors[1];
     }
-
     public Cell topright() {
         return neighbors[2];
     }
-
     public Cell left() {
         return neighbors[3];
     }
-
     public Cell right() {
         return neighbors[4];
     }
-
     public Cell bottomleft() {
         return neighbors[5];
     }
-
     public Cell bottom() {
         return neighbors[6];
     }
-
     public Cell bottomright() {
         return neighbors[7];
     }

@@ -1,6 +1,7 @@
 package org.fffere.jcell.model;
 
 import org.fffere.jcell.rule.GameOfLifeRule;
+import org.fffere.jcell.rule.GridStateRule;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,7 +10,7 @@ class GridEvaluatorTest {
     final static int NCOLS = 4;
     final static int NROWS = 4;
     Grid g = new Grid(NCOLS, NROWS);
-    GridEvaluator gridEvaluator = new GridEvaluator(null, null);
+    GridEvaluator gridEvaluator = new GridEvaluator(null);
 
     @Test
     void testWrapTopLeftCorner() {
@@ -91,37 +92,37 @@ class GridEvaluatorTest {
     void testBlinker() {
         Grid grid = new Grid(NCOLS, NROWS);
         Cell center = new Cell(NROWS/2, NCOLS/2);
-        GridEvaluator golEval = new GridEvaluator(new GameOfLifeRule(), null);
+        GridEvaluator golEval = new GridEvaluator(new GameOfLifeRule());
 
         // vertical blinker
-        grid.set(center.row-1, center.col, GameOfLifeRule.ALIVE);
-        grid.set(center.row, center.col, GameOfLifeRule.ALIVE);
-        grid.set(center.row+1, center.col, GameOfLifeRule.ALIVE);
+        grid.set(center.row-1, center.col, GridStateRule.ALIVE);
+        grid.set(center.row, center.col, GridStateRule.ALIVE);
+        grid.set(center.row+1, center.col, GridStateRule.ALIVE);
 
         golEval.eval(grid);
 
         // horizontal 3len blinker
-        assertEquals(GameOfLifeRule.DEAD, grid.get(center.row-1, center.col-1));
-        assertEquals(GameOfLifeRule.DEAD, grid.get(center.row-1, center.col));
-        assertEquals(GameOfLifeRule.DEAD, grid.get(center.row-1, center.col+1));
-        assertEquals(GameOfLifeRule.ALIVE, grid.get(center.row, center.col-1));
-        assertEquals(GameOfLifeRule.ALIVE, grid.get(center.row, center.col));
-        assertEquals(GameOfLifeRule.ALIVE, grid.get(center.row, center.col+1));
-        assertEquals(GameOfLifeRule.DEAD, grid.get(center.row+1, center.col-1));
-        assertEquals(GameOfLifeRule.DEAD, grid.get(center.row+1, center.col));
-        assertEquals(GameOfLifeRule.DEAD, grid.get(center.row+1, center.col+1));
+        assertEquals(GridStateRule.DEAD, grid.get(center.row-1, center.col-1));
+        assertEquals(GridStateRule.DEAD, grid.get(center.row-1, center.col));
+        assertEquals(GridStateRule.DEAD, grid.get(center.row-1, center.col+1));
+        assertEquals(GridStateRule.ALIVE, grid.get(center.row, center.col-1));
+        assertEquals(GridStateRule.ALIVE, grid.get(center.row, center.col));
+        assertEquals(GridStateRule.ALIVE, grid.get(center.row, center.col+1));
+        assertEquals(GridStateRule.DEAD, grid.get(center.row+1, center.col-1));
+        assertEquals(GridStateRule.DEAD, grid.get(center.row+1, center.col));
+        assertEquals(GridStateRule.DEAD, grid.get(center.row+1, center.col+1));
 
         golEval.eval(grid);
 
         // vertical 3len blinker
-        assertEquals(GameOfLifeRule.DEAD, grid.get(center.row-1, center.col-1));
-        assertEquals(GameOfLifeRule.ALIVE, grid.get(center.row-1, center.col));
-        assertEquals(GameOfLifeRule.DEAD, grid.get(center.row-1, center.col+1));
-        assertEquals(GameOfLifeRule.DEAD, grid.get(center.row, center.col-1));
-        assertEquals(GameOfLifeRule.ALIVE, grid.get(center.row, center.col));
-        assertEquals(GameOfLifeRule.DEAD, grid.get(center.row, center.col+1));
-        assertEquals(GameOfLifeRule.DEAD, grid.get(center.row+1, center.col-1));
-        assertEquals(GameOfLifeRule.ALIVE, grid.get(center.row+1, center.col));
-        assertEquals(GameOfLifeRule.DEAD, grid.get(center.row+1, center.col+1));
+        assertEquals(GridStateRule.DEAD, grid.get(center.row-1, center.col-1));
+        assertEquals(GridStateRule.ALIVE, grid.get(center.row-1, center.col));
+        assertEquals(GridStateRule.DEAD, grid.get(center.row-1, center.col+1));
+        assertEquals(GridStateRule.DEAD, grid.get(center.row, center.col-1));
+        assertEquals(GridStateRule.ALIVE, grid.get(center.row, center.col));
+        assertEquals(GridStateRule.DEAD, grid.get(center.row, center.col+1));
+        assertEquals(GridStateRule.DEAD, grid.get(center.row+1, center.col-1));
+        assertEquals(GridStateRule.ALIVE, grid.get(center.row+1, center.col));
+        assertEquals(GridStateRule.DEAD, grid.get(center.row+1, center.col+1));
     }
 }

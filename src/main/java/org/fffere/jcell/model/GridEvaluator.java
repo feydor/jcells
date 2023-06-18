@@ -5,15 +5,13 @@ import org.fffere.jcell.rule.GridStateRule;
 /** Applies the current rule and generates the next Grid */
 public class GridEvaluator {
     private final GridStateRule stateRule;
-    private final GridNeighborRule neighborRule; // TODO: Move getNeighbors code to neighborRule
 
-    public GridEvaluator(GridStateRule stateRule, GridNeighborRule neighborRule) {
+    public GridEvaluator(GridStateRule stateRule) {
         this.stateRule = stateRule;
-        this.neighborRule = neighborRule;
     }
 
     public void eval(Grid currentState) {
-        Grid nextState = currentState.deepClone();
+        Grid nextState = new Grid(currentState.width, currentState.height);
         for (int row=0; row<currentState.height; ++row) {
             for (int col=0; col<currentState.width; ++col) {
                 var cell = new Cell(row, col, currentState.get(row, col));

@@ -1,7 +1,6 @@
 package org.fffere.jcell.rule;
 
 import org.fffere.jcell.model.Cell;
-import org.fffere.jcell.model.Grid;
 import org.fffere.jcell.model.Neighbors;
 
 /**
@@ -14,8 +13,6 @@ import org.fffere.jcell.model.Neighbors;
  * </ol>
  */
 public class GameOfLifeRule implements GridStateRule {
-    public static final int ALIVE = 0x00FF00;
-    public static final int DEAD = Grid.DEFAULT;
 
     @Override
     public int apply(Cell cell, Neighbors neighbors) {
