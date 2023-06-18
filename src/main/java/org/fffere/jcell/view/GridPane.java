@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class GridPane extends JPanel {
     private final Grid grid;
-    private final int CELL_SIZE = 30;
+    private final int CELL_SIZE = 15;
 
     public GridPane(Grid grid, GridEvaluator gridEvaluator) {
         this.grid = grid;

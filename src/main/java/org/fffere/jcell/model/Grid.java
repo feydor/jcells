@@ -32,7 +32,8 @@ public class Grid {
         var sb = new StringBuilder();
         for (int i=0; i<height; ++i) {
             for (int j=0; j<width; ++j) {
-                sb.append(Integer.toString(grid[j][i], 16)).append(" ");
+                var box = grid[j][i] == DEFAULT ? "□" : "■";
+                sb.append(box);
             }
             sb.append("\n");
         }
