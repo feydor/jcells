@@ -14,13 +14,19 @@ import org.fffere.jcell.model.Neighbors;
  */
 public class GameOfLifeRule implements GridStateRule {
 
+    private final int alive;
+
+    public GameOfLifeRule(int alive) {
+        this.alive = alive;
+    }
+
     @Override
     public int apply(Cell cell, Neighbors neighbors) {
-        int neighborsAlive = neighbors.countIf(c -> ALIVE == c.value);
-        if (cell.value == ALIVE && (neighborsAlive == 2 || neighborsAlive == 3)) {
-            return ALIVE;
+        int neighborsAlive = neighbors.countIf(c -> alive == c.value);
+        if (cell.value == alive && (neighborsAlive == 2 || neighborsAlive == 3)) {
+            return alive;
         } else if (cell.value == DEAD && neighborsAlive == 3) {
-            return ALIVE;
+            return alive;
         } else {
             return DEAD;
         }

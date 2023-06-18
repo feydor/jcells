@@ -7,32 +7,33 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameOfLifeRuleTest {
-    GameOfLifeRule gameOfLifeRule = new GameOfLifeRule();
+    static final int ALIVE = 0x0000FF;
+    GameOfLifeRule gameOfLifeRule = new GameOfLifeRule(ALIVE);
 
     @Test
     void testSingleCell() {
-        var cell = new Cell(10, 10, GridStateRule.ALIVE);
+        var cell = new Cell(10, 10, ALIVE);
         var res = gameOfLifeRule.apply(cell, getTestNeighbors(0));
         assertEquals(GridStateRule.DEAD, res);
     }
 
     @Test
     void testThreeAliveNeighbors() {
-        var cell = new Cell(10, 10, GridStateRule.ALIVE);
+        var cell = new Cell(10, 10, ALIVE);
         var res = gameOfLifeRule.apply(cell, getTestNeighbors(3));
-        assertEquals(GridStateRule.ALIVE, res);
+        assertEquals(ALIVE, res);
     }
 
     @Test
     void testDeadCellWithThreeAliveNeighbors() {
         var cell = new Cell(10, 10, GridStateRule.DEAD);
         var res = gameOfLifeRule.apply(cell, getTestNeighbors(3));
-        assertEquals(GridStateRule.ALIVE, res);
+        assertEquals(ALIVE, res);
     }
 
     @Test
     void testMoreThanThreeNeighbors() {
-        var cell = new Cell(10, 10, GridStateRule.ALIVE);
+        var cell = new Cell(10, 10, ALIVE);
         var res = gameOfLifeRule.apply(cell, getTestNeighbors(4));
         assertEquals(GridStateRule.DEAD, res);
     }
@@ -50,7 +51,7 @@ class GameOfLifeRuleTest {
         };
 
         for (int i=0; i<nAlive; ++i) {
-            cells[i].value = GridStateRule.ALIVE;
+            cells[i].value = ALIVE;
         }
 
         return new Neighbors(cells);

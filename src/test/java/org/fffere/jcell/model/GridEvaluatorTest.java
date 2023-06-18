@@ -92,12 +92,13 @@ class GridEvaluatorTest {
     void testBlinker() {
         Grid grid = new Grid(NCOLS, NROWS);
         Cell center = new Cell(NROWS/2, NCOLS/2);
-        GridEvaluator golEval = new GridEvaluator(new GameOfLifeRule());
+        int alive = 0x0000FF;
+        GridEvaluator golEval = new GridEvaluator(new GameOfLifeRule(alive));
 
         // vertical blinker
-        grid.set(center.row-1, center.col, GridStateRule.ALIVE);
-        grid.set(center.row, center.col, GridStateRule.ALIVE);
-        grid.set(center.row+1, center.col, GridStateRule.ALIVE);
+        grid.set(center.row-1, center.col, alive);
+        grid.set(center.row, center.col, alive);
+        grid.set(center.row+1, center.col, alive);
 
         golEval.eval(grid);
 
@@ -105,9 +106,9 @@ class GridEvaluatorTest {
         assertEquals(GridStateRule.DEAD, grid.get(center.row-1, center.col-1));
         assertEquals(GridStateRule.DEAD, grid.get(center.row-1, center.col));
         assertEquals(GridStateRule.DEAD, grid.get(center.row-1, center.col+1));
-        assertEquals(GridStateRule.ALIVE, grid.get(center.row, center.col-1));
-        assertEquals(GridStateRule.ALIVE, grid.get(center.row, center.col));
-        assertEquals(GridStateRule.ALIVE, grid.get(center.row, center.col+1));
+        assertEquals(alive, grid.get(center.row, center.col-1));
+        assertEquals(alive, grid.get(center.row, center.col));
+        assertEquals(alive, grid.get(center.row, center.col+1));
         assertEquals(GridStateRule.DEAD, grid.get(center.row+1, center.col-1));
         assertEquals(GridStateRule.DEAD, grid.get(center.row+1, center.col));
         assertEquals(GridStateRule.DEAD, grid.get(center.row+1, center.col+1));
@@ -116,13 +117,13 @@ class GridEvaluatorTest {
 
         // vertical 3len blinker
         assertEquals(GridStateRule.DEAD, grid.get(center.row-1, center.col-1));
-        assertEquals(GridStateRule.ALIVE, grid.get(center.row-1, center.col));
+        assertEquals(alive, grid.get(center.row-1, center.col));
         assertEquals(GridStateRule.DEAD, grid.get(center.row-1, center.col+1));
         assertEquals(GridStateRule.DEAD, grid.get(center.row, center.col-1));
-        assertEquals(GridStateRule.ALIVE, grid.get(center.row, center.col));
+        assertEquals(alive, grid.get(center.row, center.col));
         assertEquals(GridStateRule.DEAD, grid.get(center.row, center.col+1));
         assertEquals(GridStateRule.DEAD, grid.get(center.row+1, center.col-1));
-        assertEquals(GridStateRule.ALIVE, grid.get(center.row+1, center.col));
+        assertEquals(alive, grid.get(center.row+1, center.col));
         assertEquals(GridStateRule.DEAD, grid.get(center.row+1, center.col+1));
     }
 }
