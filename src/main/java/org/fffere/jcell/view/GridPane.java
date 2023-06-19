@@ -2,23 +2,33 @@ package org.fffere.jcell.view;
 
 import org.fffere.jcell.model.Grid;
 import org.fffere.jcell.model.GridEvaluator;
+import org.fffere.jcell.parser.RleParser;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class GridPane extends JPanel {
-    private final Grid grid;
-    private final int CELL_SIZE = 15;
+    public Grid grid;
+    private static final int MARGIN = 20;
+    private static final int CELL_SIZE = 10;
+    public final Dimension size;
+    private final int alive;
 
-    public GridPane(Grid grid, GridEvaluator gridEvaluator) {
+    public GridPane(Grid grid, GridEvaluator gridEvaluator, int alive) {
         this.grid = grid;
-        TickButton tickButton = new TickButton(() -> {
-            gridEvaluator.eval(grid);
-            repaint();
-            return null;
-        });
-        add(tickButton);
-        setPreferredSize(new Dimension(grid.width * CELL_SIZE, grid.height * CELL_SIZE));
+        this.alive = alive;
+        size = new Dimension((grid.width * CELL_SIZE) - 2*MARGIN,
+                (grid.height * CELL_SIZE) - 2*MARGIN);
+        setPreferredSize(size);
+        var paddingBorder = new EmptyBorder(MARGIN, MARGIN, MARGIN, MARGIN);
+        var solidBorder = new MatteBorder(1, 1, 1, 1, Color.BLACK);
+        var compoundBorder = new CompoundBorder(solidBorder, paddingBorder);
+        setBorder(compoundBorder);
     }
 
     @Override
@@ -33,9 +43,14 @@ public class GridPane extends JPanel {
                 int x = i * CELL_SIZE;
                 int y = j * CELL_SIZE;
                 g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
-                g.setColor(Color.BLACK);
+                g.setColor(Color.GRAY);
                 g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
             }
         }
+    }
+
+    public void loadPatternFile(File file) throws IOException {
+        grid = RleParser.parse(file, grid.width, grid.height, alive, Grid.DEFAULT);
+        repaint();
     }
 }
