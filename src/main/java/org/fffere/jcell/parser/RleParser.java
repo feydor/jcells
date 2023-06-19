@@ -21,6 +21,7 @@ public class RleParser {
         var reader = new BufferedReader(new FileReader(file));
 
         // initial parse of metadata and data
+        System.out.println("Parsing " + file.getAbsolutePath() + "...");
         String line = "";
         int x = 0, y = 0;
         var dataString = new StringBuilder();
@@ -90,8 +91,6 @@ public class RleParser {
                 grid.set(r, c++, val);
             }
         }
-
-        System.out.println(grid);
 
         return grid;
     }

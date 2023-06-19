@@ -1,9 +1,14 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'org.fffere'
 version '1.0-SNAPSHOT'
+
+application {
+    mainClassName = group + '.Main'
+}
 
 repositories {
     mavenCentral()
