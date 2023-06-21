@@ -37,7 +37,7 @@ public class JCellsFrame extends JFrame {
         dropdown = new JComboBox<>(new DefaultComboBoxModel<>());
         for (var name : RULE_NAMES)
             dropdown.addItem(name);
-        dropdown.setSelectedIndex(0);
+        dropdown.setSelectedIndex(RULE_NAMES.length-1);
         dropdown.addActionListener(e -> {
             String rule = (String) dropdown.getSelectedItem();
             gridPanel.changeRule(StateRulesDb.find(rule));

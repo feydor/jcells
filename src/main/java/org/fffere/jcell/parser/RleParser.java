@@ -8,12 +8,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /** Load a grid from a rle file */
 public class RleParser {
-    private static final char[] TAGS = new char[]{ 'b', 'o' };
 
     public static Pair<Grid, RleFile> parse(File file, int ncols, int nrows, int alive, int dead) throws IOException {
         var ext = file.getName().split("\\.")[1];
@@ -23,7 +21,7 @@ public class RleParser {
 
         // initial parse of metadata and data
         System.out.println("Parsing " + file.getAbsolutePath() + "...");
-        String line = "", ruleStr = "B2/S23";
+        String line, ruleStr = "B2/S23";
         int x = 0, y = 0;
         int[] birthConditions = new int[]{2}, surviveConditions = new int[]{2, 3};
         var dataString = new StringBuilder();

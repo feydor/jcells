@@ -3,7 +3,7 @@ A system for evaluating Life-like cellular automata
 
 `./gradlew run`
 
-![screenshot](./images/Screenshot_2023-06-18_210842.png)
+![animation](./images/Animation.gif)
 
 ## TODO
 1. ~~Parse [RLE](https://conwaylife.com/wiki/Run_Length_Encoded) format~~
@@ -13,5 +13,5 @@ A system for evaluating Life-like cellular automata
    + ~~main panel is "floating" and has a nice shadow, right hand-side has the buttons~~
 4. Allow non-Life rules like [Turmite](https://en.wikipedia.org/wiki/Turmite) that look at groups of cells at a time
     + As an idea, maybe pass in a living cell and its neighboring cells and determine their state at the same time?
-5. Dropdown menu to switch between multiple preset rules
+5. ~~Dropdown menu to switch between multiple preset rules~~
 6. Reset button
