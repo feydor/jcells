@@ -71,7 +71,6 @@ public class GridEvaluator {
 
     public void setStateRule(StateRule stateRule) {
         this.stateRule = stateRule;
-        System.out.println(stateRule.name());
     }
 
     public StateRule getStateRule() {

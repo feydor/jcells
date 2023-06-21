@@ -1,6 +1,7 @@
 package org.fffere.jcell.parser;
 
 import org.fffere.jcell.model.Grid;
+import org.fffere.jcell.util.Pair;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +15,7 @@ import java.util.List;
 public class RleParser {
     private static final char[] TAGS = new char[]{ 'b', 'o' };
 
-    public static Grid parse(File file, int ncols, int nrows, int alive, int dead) throws IOException {
+    public static Pair<Grid, RleFile> parse(File file, int ncols, int nrows, int alive, int dead) throws IOException {
         var ext = file.getName().split("\\.")[1];
         if (!ext.equalsIgnoreCase("rle"))
             throw new IllegalArgumentException(String.format("File '%s' not in RLE format!", file.getName()));
@@ -22,8 +23,9 @@ public class RleParser {
 
         // initial parse of metadata and data
         System.out.println("Parsing " + file.getAbsolutePath() + "...");
-        String line = "";
+        String line = "", ruleStr = "B2/S23";
         int x = 0, y = 0;
+        int[] birthConditions = new int[]{2}, surviveConditions = new int[]{2, 3};
         var dataString = new StringBuilder();
         while (true) {
             line = reader.readLine();
@@ -38,6 +40,11 @@ public class RleParser {
                 x = Integer.parseInt(tokens[0].split("=")[1]);
                 if (tokens[1].charAt(0) != 'y') throw new IllegalArgumentException("Missing y parameter.");
                 y = Integer.parseInt(tokens[1].split("=")[1]);
+                if (tokens.length == 2 || tokens[2].charAt(0) != 'r') continue;
+                ruleStr = tokens[2].split("=")[1];
+                var ruleTokens = ruleStr.split("/");
+                birthConditions = extractDigits(ruleTokens[0]);
+                surviveConditions = extractDigits(ruleTokens[1]);
             } else {
                 // a line of data
                 dataString.append(line);
@@ -50,7 +57,6 @@ public class RleParser {
         System.out.println("x = " + x + ", y = " + y);
 
         var lines = data.split("((?<=\\$)|(?=\\$))"); // keep delimiter
-        System.out.println(Arrays.toString(lines));
 
         // Parse data string
         var rleData = new ArrayList<RleData>();
@@ -92,7 +98,21 @@ public class RleParser {
             }
         }
 
-        return grid;
+        return new Pair<>(grid, new RleFile(ruleStr, x, y, birthConditions, surviveConditions, rleData));
+    }
+
+    /**
+     * Extracts the digits from an RLE rule string
+     * @param ruleStr An RLE rule string, for example: B3 or S345
+     * @return the digits in the string
+     */
+    private static int[] extractDigits(String ruleStr) {
+        if (ruleStr.charAt(0) != 'B' && ruleStr.charAt(0) != 'S')
+            throw new IllegalArgumentException(String.format("Not a valid RLE rule string! '%s'", ruleStr));
+        int[] digits = new int[ruleStr.length()-1];
+        for (int i=1; i<ruleStr.length(); ++i)
+            digits[i-1] = ruleStr.charAt(i) - '0';
+        return digits;
     }
 
     /**

@@ -12,6 +12,7 @@ import java.io.IOException;
 public class JCellsFrame extends JFrame {
     private final GridPane gridPanel;
     private final JButton openButton;
+    private final JComboBox<String> dropdown;
     private final JFileChooser fileChooser = new JFileChooser(ResourceConstants.EXAMPLES_DIR);
     private final static String[] RULE_NAMES = StateRulesDb.ALL_RULES.stream().map(StateRule::name).toList().toArray(new String[]{});
 
@@ -33,9 +34,14 @@ public class JCellsFrame extends JFrame {
         openButton.addActionListener(this::handleFileOpenButton);
         menuBar.add(openButton);
 
-        JComboBox<String> dropdown = new JComboBox<>(RULE_NAMES);
+        dropdown = new JComboBox<>(new DefaultComboBoxModel<>());
+        for (var name : RULE_NAMES)
+            dropdown.addItem(name);
         dropdown.setSelectedIndex(0);
-        dropdown.addActionListener(this::handleDropdown);
+        dropdown.addActionListener(e -> {
+            String rule = (String) dropdown.getSelectedItem();
+            gridPanel.changeRule(StateRulesDb.find(rule));
+        });
         menuBar.add(new JLabel("Rule: "));
         menuBar.add(dropdown);
 
@@ -59,7 +65,9 @@ public class JCellsFrame extends JFrame {
                 var file = fileChooser.getSelectedFile();
                 try {
                     System.out.println("Opening: " + file.getName());
-                    gridPanel.loadPatternFile(file);
+                    var parsedFile = gridPanel.loadPatternFile(file);
+                    dropdown.addItem(parsedFile.ruleString());
+                    dropdown.setSelectedItem(parsedFile.ruleString());
                 } catch (IOException ex) {
                     System.out.println("Error opening file '" + file + "'");
                     ex.printStackTrace();
@@ -68,12 +76,5 @@ public class JCellsFrame extends JFrame {
                 System.out.println("Open command cancelled by user");
             }
         }
-    }
-
-    private void handleDropdown(ActionEvent e) {
-        var cb = (JComboBox<String>)e.getSource();
-        String rule = (String)cb.getSelectedItem();
-        System.out.println("Changing to rule: " + rule);
-        gridPanel.changeRule(StateRulesDb.find(rule));
     }
 }

@@ -2,8 +2,11 @@ package org.fffere.jcell.view;
 
 import org.fffere.jcell.model.Grid;
 import org.fffere.jcell.model.GridEvaluator;
+import org.fffere.jcell.parser.RleFile;
 import org.fffere.jcell.parser.RleParser;
 import org.fffere.jcell.rule.StateRule;
+import org.fffere.jcell.rule.StateRulesDb;
+import org.fffere.jcell.util.Pair;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -52,12 +55,17 @@ public class GridPane extends JPanel {
         }
     }
 
-    public void loadPatternFile(File file) throws IOException {
-        grid = RleParser.parse(file, grid.width, grid.height, alive, Grid.DEFAULT);
+    public RleFile loadPatternFile(File file) throws IOException {
+        Pair<Grid, RleFile> parsed = RleParser.parse(file, grid.width, grid.height, alive, Grid.DEFAULT);
+        grid = parsed.first();
+        changeRule(StateRulesDb.fromParsedFile(parsed.second()));
         repaint();
+        return parsed.second();
     }
 
     public void changeRule(StateRule rule) {
+        System.out.println("Changing to rule: " + rule.name());
         gridEvaluator.setStateRule(rule);
+        repaint();
     }
 }

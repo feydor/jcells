@@ -2,8 +2,10 @@ package org.fffere;
 
 import org.fffere.jcell.model.Grid;
 import org.fffere.jcell.model.GridEvaluator;
+import org.fffere.jcell.parser.RleFile;
 import org.fffere.jcell.parser.RleParser;
 import org.fffere.jcell.rule.StateRulesDb;
+import org.fffere.jcell.util.Pair;
 import org.fffere.jcell.view.GridPane;
 import org.fffere.jcell.view.JCellsFrame;
 import org.fffere.jcell.view.ResourceConstants;
@@ -21,9 +23,13 @@ public class Main {
     static final int NCOLS = 100;
 
     public static void main(String[] args) throws IOException {
-        GridEvaluator gridEvaluator = new GridEvaluator(StateRulesDb.GAME_OF_LIFE);
+        var stateRulesDb = new StateRulesDb();
         var file = new File("./examples/spacefiller.rle");
-        Grid theGrid = RleParser.parse(file, NCOLS, NROWS, StateRulesDb.ALIVE, StateRulesDb.DEAD);
+        Pair<Grid, RleFile> parsed = RleParser.parse(file, NCOLS, NROWS, StateRulesDb.ALIVE, StateRulesDb.DEAD);
+        Grid theGrid = parsed.first();
+
+        StateRulesDb.fromParsedFile(parsed.second());
+        var gridEvaluator = new GridEvaluator(StateRulesDb.GAME_OF_LIFE);
 
         initLookAndFeel();
         AtomicBoolean running = new AtomicBoolean(false);

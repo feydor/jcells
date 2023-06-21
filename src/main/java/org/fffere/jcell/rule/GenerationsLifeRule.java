@@ -9,14 +9,16 @@ public class GenerationsLifeRule implements StateRule {
     private final int[] birthConditions;
     private final int[] surviveConditions;
     private final int[] states;
+    private final String name;
 
-    public GenerationsLifeRule(int[] birthConditions, int[] surviveConditions, int[] states) {
+    public GenerationsLifeRule(int[] birthConditions, int[] surviveConditions, int[] states, String name) {
         if (birthConditions.length < 1) throw new IllegalArgumentException("Birth condition must be greater than 1.");
         if (surviveConditions.length < 1) throw new IllegalArgumentException("Survive condition is invalid.");
         if (states.length < 1) throw new IllegalArgumentException("Generations must have at least 1 value.");
         this.birthConditions = birthConditions;
         this.surviveConditions = surviveConditions;
         this.states = states;
+        this.name = name;
     }
 
     @Override
@@ -49,7 +51,23 @@ public class GenerationsLifeRule implements StateRule {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GenerationsLifeRule that = (GenerationsLifeRule) o;
+        return Arrays.equals(birthConditions, that.birthConditions) && Arrays.equals(surviveConditions, that.surviveConditions) && Arrays.equals(states, that.states);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Arrays.hashCode(birthConditions);
+        result = 31 * result + Arrays.hashCode(surviveConditions);
+        result = 31 * result + Arrays.hashCode(states);
+        return result;
+    }
+
+    @Override
     public String name() {
-        return "Generations";
+        return name;
     }
 }
