@@ -1,5 +1,8 @@
 package org.fffere.jcell.view;
 
+import org.fffere.jcell.rule.StateRule;
+import org.fffere.jcell.rule.StateRulesDb;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -10,6 +13,7 @@ public class JCellsFrame extends JFrame {
     private final GridPane gridPanel;
     private final JButton openButton;
     private final JFileChooser fileChooser = new JFileChooser(ResourceConstants.EXAMPLES_DIR);
+    private final static String[] RULE_NAMES = StateRulesDb.ALL_RULES.stream().map(StateRule::name).toList().toArray(new String[]{});
 
     public JCellsFrame(GridPane gridPane, Component[] menuItems) {
         this.gridPanel = gridPane;
@@ -17,6 +21,10 @@ public class JCellsFrame extends JFrame {
         setTitle("JCells");
 
         var menuBar = new JMenuBar();
+        var menuLayout = new FlowLayout();
+        menuLayout.setAlignment(FlowLayout.LEFT);
+        menuBar.setLayout(menuLayout);
+        setJMenuBar(menuBar);
         for (var mi : menuItems)
             menuBar.add(mi);
 
@@ -24,7 +32,12 @@ public class JCellsFrame extends JFrame {
                 new ImageIcon(ResourceConstants.IMG_OPEN_FILE));
         openButton.addActionListener(this::handleFileOpenButton);
         menuBar.add(openButton);
-        setJMenuBar(menuBar);
+
+        JComboBox<String> dropdown = new JComboBox<>(RULE_NAMES);
+        dropdown.setSelectedIndex(0);
+        dropdown.addActionListener(this::handleDropdown);
+        menuBar.add(new JLabel("Rule: "));
+        menuBar.add(dropdown);
 
         JPanel mainPane = new JPanel(new GridLayout(0, 1, 10, 10));
         int margins = 20;
@@ -55,5 +68,12 @@ public class JCellsFrame extends JFrame {
                 System.out.println("Open command cancelled by user");
             }
         }
+    }
+
+    private void handleDropdown(ActionEvent e) {
+        var cb = (JComboBox<String>)e.getSource();
+        String rule = (String)cb.getSelectedItem();
+        System.out.println("Changing to rule: " + rule);
+        gridPanel.changeRule(StateRulesDb.find(rule));
     }
 }

@@ -5,10 +5,10 @@ import org.fffere.jcell.model.Neighbors;
 
 import java.util.Arrays;
 
-public class GenerationsLifeRule implements GridStateRule {
-    int[] birthConditions;
-    int[] surviveConditions;
-    int[] states;
+public class GenerationsLifeRule implements StateRule {
+    private final int[] birthConditions;
+    private final int[] surviveConditions;
+    private final int[] states;
 
     public GenerationsLifeRule(int[] birthConditions, int[] surviveConditions, int[] states) {
         if (birthConditions.length < 1) throw new IllegalArgumentException("Birth condition must be greater than 1.");
@@ -17,7 +17,6 @@ public class GenerationsLifeRule implements GridStateRule {
         this.birthConditions = birthConditions;
         this.surviveConditions = surviveConditions;
         this.states = states;
-        Arrays.sort(this.states);
     }
 
     @Override
@@ -33,9 +32,12 @@ public class GenerationsLifeRule implements GridStateRule {
             return found.isPresent() ? states[0] : states[1];
         } else {
             // get the cell's state
-            int state = Arrays.binarySearch(states, cell.value);
+            int state = -1;
+            for (int i=0; i<states.length; ++i)
+                if (states[i] == cell.value)
+                    state = i;
             if (state < 0)
-                throw new IllegalArgumentException("Cell was found with invalid value=" + cell.value);
+                throw new IllegalArgumentException("Cell was found with invalid value=" + Integer.toHexString(cell.value));
 
             // last state wraps around to dead
             if (state == states.length-1) {
@@ -44,5 +46,10 @@ public class GenerationsLifeRule implements GridStateRule {
 
             return states[state+1];
         }
+    }
+
+    @Override
+    public String name() {
+        return "Generations";
     }
 }

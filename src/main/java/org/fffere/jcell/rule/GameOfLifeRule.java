@@ -12,7 +12,7 @@ import org.fffere.jcell.model.Neighbors;
  *     <li>Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction</li>
  * </ol>
  */
-public class GameOfLifeRule implements GridStateRule {
+public class GameOfLifeRule implements StateRule {
 
     private final int alive;
 
@@ -30,5 +30,10 @@ public class GameOfLifeRule implements GridStateRule {
         } else {
             return DEAD;
         }
+    }
+
+    @Override
+    public String name() {
+        return "Game of Life";
     }
 }

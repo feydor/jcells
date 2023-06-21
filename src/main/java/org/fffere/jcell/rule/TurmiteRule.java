@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *     <li>move forward one square.</li>
  * </ol>
  */
-public class TurmiteRule implements GridStateRule {
+public class TurmiteRule implements StateRule {
     ThreadLocalRandom random = ThreadLocalRandom.current();
 
     @Override
@@ -22,5 +22,10 @@ public class TurmiteRule implements GridStateRule {
         int direction = random.nextInt(0, 4);
         int randomColor = random.nextInt(0, 0xFFFF0F);
         throw new IllegalArgumentException("Unimplemented!");
+    }
+
+    @Override
+    public String name() {
+        return "Turmite";
     }
 }

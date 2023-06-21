@@ -1,12 +1,12 @@
 package org.fffere.jcell.model;
 
-import org.fffere.jcell.rule.GridStateRule;
+import org.fffere.jcell.rule.StateRule;
 
 /** Applies the current rule and generates the next Grid */
 public class GridEvaluator {
-    private final GridStateRule stateRule;
+    private StateRule stateRule;
 
-    public GridEvaluator(GridStateRule stateRule) {
+    public GridEvaluator(StateRule stateRule) {
         this.stateRule = stateRule;
     }
 
@@ -67,5 +67,14 @@ public class GridEvaluator {
         c = col+1 >= w ? 0 : col+1; // shift right
         neighbors[7] = new Cell(r, c, grid.get(r, c));
         return new Neighbors(neighbors);
+    }
+
+    public void setStateRule(StateRule stateRule) {
+        this.stateRule = stateRule;
+        System.out.println(stateRule.name());
+    }
+
+    public StateRule getStateRule() {
+        return stateRule;
     }
 }

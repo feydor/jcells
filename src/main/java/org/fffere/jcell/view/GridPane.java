@@ -3,6 +3,7 @@ package org.fffere.jcell.view;
 import org.fffere.jcell.model.Grid;
 import org.fffere.jcell.model.GridEvaluator;
 import org.fffere.jcell.parser.RleParser;
+import org.fffere.jcell.rule.StateRule;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -14,6 +15,7 @@ import java.io.IOException;
 
 public class GridPane extends JPanel {
     public Grid grid;
+    private final GridEvaluator gridEvaluator;
     private static final int MARGIN = 20;
     private static final int CELL_SIZE = 10;
     public final Dimension size;
@@ -21,6 +23,7 @@ public class GridPane extends JPanel {
 
     public GridPane(Grid grid, GridEvaluator gridEvaluator, int alive) {
         this.grid = grid;
+        this.gridEvaluator = gridEvaluator;
         this.alive = alive;
         size = new Dimension((grid.width * CELL_SIZE) - 2*MARGIN,
                 (grid.height * CELL_SIZE) - 2*MARGIN);
@@ -52,5 +55,9 @@ public class GridPane extends JPanel {
     public void loadPatternFile(File file) throws IOException {
         grid = RleParser.parse(file, grid.width, grid.height, alive, Grid.DEFAULT);
         repaint();
+    }
+
+    public void changeRule(StateRule rule) {
+        gridEvaluator.setStateRule(rule);
     }
 }

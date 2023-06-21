@@ -14,7 +14,7 @@ class GameOfLifeRuleTest {
     void testSingleCell() {
         var cell = new Cell(10, 10, ALIVE);
         var res = gameOfLifeRule.apply(cell, getTestNeighbors(0));
-        assertEquals(GridStateRule.DEAD, res);
+        assertEquals(StateRule.DEAD, res);
     }
 
     @Test
@@ -26,7 +26,7 @@ class GameOfLifeRuleTest {
 
     @Test
     void testDeadCellWithThreeAliveNeighbors() {
-        var cell = new Cell(10, 10, GridStateRule.DEAD);
+        var cell = new Cell(10, 10, StateRule.DEAD);
         var res = gameOfLifeRule.apply(cell, getTestNeighbors(3));
         assertEquals(ALIVE, res);
     }
@@ -35,7 +35,7 @@ class GameOfLifeRuleTest {
     void testMoreThanThreeNeighbors() {
         var cell = new Cell(10, 10, ALIVE);
         var res = gameOfLifeRule.apply(cell, getTestNeighbors(4));
-        assertEquals(GridStateRule.DEAD, res);
+        assertEquals(StateRule.DEAD, res);
     }
 
     private Neighbors getTestNeighbors(int nAlive) {

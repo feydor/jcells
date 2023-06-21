@@ -1,10 +1,10 @@
 package org.fffere.jcell.model;
 
-import org.fffere.jcell.rule.GridStateRule;
+import org.fffere.jcell.rule.StateRulesDb;
 
 public class Grid {
     protected int[][] grid;
-    public static final int DEFAULT = GridStateRule.DEAD;
+    public static final int DEFAULT = StateRulesDb.DEAD;
     public final int width;
     public final int height;
 
