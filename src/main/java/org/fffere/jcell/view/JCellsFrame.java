@@ -40,7 +40,7 @@ public class JCellsFrame extends JFrame {
         });
         menuBar.add(advanceButton);
 
-        var resetButton = new JButton("Reset");
+        var resetButton = new JButton("Reset", new ImageIcon(ResourceConstants.IMG_REFRESH_ARROW));
         resetButton.addActionListener(e -> {
             gEnv.resetState();
             repaint();

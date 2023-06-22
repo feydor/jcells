@@ -2,7 +2,7 @@ package org.fffere.jcell.model;
 
 import org.fffere.jcell.rule.StateRulesDb;
 
-public class Grid {
+public class Grid implements Cloneable {
     protected int[][] grid;
     public static final int DEFAULT = StateRulesDb.DEAD;
     public final int width;
@@ -38,5 +38,22 @@ public class Grid {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    @Override
+    public Grid clone() {
+        try {
+            Grid clone = (Grid) super.clone();
+            // Deep copy mutable state
+            clone.grid = new int[width][height];
+            for (int i=0; i<height; ++i) {
+                for (int j=0; j<width; ++j) {
+                    clone.grid[j][i] = grid[j][i];
+                }
+            }
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

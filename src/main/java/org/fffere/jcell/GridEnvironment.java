@@ -42,7 +42,7 @@ public class GridEnvironment {
         }
 
         grid = parsed.first();
-        savedGrid = grid;
+        savedGrid = grid.clone();
         currentRleFile = parsed.second();
         stateRulesDb = new StateRulesDb();
         Pair<StateRule, Boolean> res = stateRulesDb.fromParsedFile(currentRleFile);
@@ -69,6 +69,7 @@ public class GridEnvironment {
         }
 
         grid = parsed.first();
+        savedGrid = grid.clone();
         currentRleFile = parsed.second();
         Pair<StateRule, Boolean> res = stateRulesDb.fromParsedFile(currentRleFile);
         gridEvaluator.setStateRule(res.first());
@@ -91,7 +92,7 @@ public class GridEnvironment {
 
     public void resetState() {
         System.out.println("Resetting state...");
-        grid = savedGrid;
+        grid = savedGrid.clone();
     }
 
     public void run() {
