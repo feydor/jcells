@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
+/** Draws the Grid */
 public class GridPane extends JPanel {
     public final GridEnvironment gEnv;
     private static final int MARGIN = 20;

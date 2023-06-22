@@ -6,15 +6,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GridEvaluatorTest {
+class GridTest {
     final static int NCOLS = 4;
     final static int NROWS = 4;
-    Grid g = new Grid(NCOLS, NROWS);
-    GridEvaluator gridEvaluator = new GridEvaluator(null);
+    final Grid grid = new Grid(NCOLS, NROWS);
 
     @Test
     void testWrapTopLeftCorner() {
-        var neighbors = gridEvaluator.getNeighbors(g, 0, 0);
+        var neighbors = grid.getNeighbors(0, 0);
 
         assertEquals(new Cell(NROWS-1, NCOLS-1), neighbors.topleft());
         assertEquals(new Cell(NROWS-1, 0), neighbors.top());
@@ -28,7 +27,7 @@ class GridEvaluatorTest {
 
     @Test
     void testWrapTopRightCorner() {
-        var neighbors = gridEvaluator.getNeighbors(g, 0, NCOLS-1);
+        var neighbors = grid.getNeighbors(0, NCOLS-1);
 
         assertEquals(new Cell(NROWS-1, NCOLS-2), neighbors.topleft());
         assertEquals(new Cell(NROWS-1, NCOLS-1), neighbors.top());
@@ -44,7 +43,7 @@ class GridEvaluatorTest {
     void testWrapBotLeftCorner() {
         int r = NROWS-1;
         int c = 0;
-        var neighbors = gridEvaluator.getNeighbors(g, r, c);
+        var neighbors = grid.getNeighbors(r, c);
 
         assertEquals(new Cell(r-1, NCOLS-1), neighbors.topleft());
         assertEquals(new Cell(r-1, c), neighbors.top());
@@ -60,7 +59,7 @@ class GridEvaluatorTest {
     void testWrapBotRightCorner() {
         int r = NROWS-1;
         int c = NCOLS-1;
-        var neighbors = gridEvaluator.getNeighbors(g, r, c);
+        var neighbors = grid.getNeighbors(r, c);
 
         assertEquals(new Cell(r-1, c-1), neighbors.topleft());
         assertEquals(new Cell(r-1, c), neighbors.top());
@@ -76,7 +75,7 @@ class GridEvaluatorTest {
     void testInteriorPoint() {
         int r = 1;
         int c = 1;
-        var neighbors = gridEvaluator.getNeighbors(g, r, c);
+        var neighbors = grid.getNeighbors(r, c);
 
         assertEquals(new Cell(r-1, c-1), neighbors.topleft());
         assertEquals(new Cell(r-1, c), neighbors.top());
@@ -91,39 +90,38 @@ class GridEvaluatorTest {
     @Test
     void testBlinker() {
         Grid grid = new Grid(NCOLS, NROWS);
-        Cell center = new Cell(NROWS/2, NCOLS/2);
-        int alive = 0x0000FF;
-        GridEvaluator golEval = new GridEvaluator(new GameOfLifeRule(alive));
+        int r = NROWS/2, c = NCOLS/2, alive = 0x0000FF;
+        StateRule gameOfLife = new GameOfLifeRule(alive);
 
         // vertical blinker
-        grid.set(center.row-1, center.col, alive);
-        grid.set(center.row, center.col, alive);
-        grid.set(center.row+1, center.col, alive);
+        grid.set(r-1, c, alive);
+        grid.set(r, c, alive);
+        grid.set(r+1, c, alive);
 
-        golEval.eval(grid);
+        grid.eval(gameOfLife);
 
         // horizontal 3len blinker
-        assertEquals(StateRule.DEAD, grid.get(center.row-1, center.col-1));
-        assertEquals(StateRule.DEAD, grid.get(center.row-1, center.col));
-        assertEquals(StateRule.DEAD, grid.get(center.row-1, center.col+1));
-        assertEquals(alive, grid.get(center.row, center.col-1));
-        assertEquals(alive, grid.get(center.row, center.col));
-        assertEquals(alive, grid.get(center.row, center.col+1));
-        assertEquals(StateRule.DEAD, grid.get(center.row+1, center.col-1));
-        assertEquals(StateRule.DEAD, grid.get(center.row+1, center.col));
-        assertEquals(StateRule.DEAD, grid.get(center.row+1, center.col+1));
+        assertEquals(StateRule.DEAD, grid.get(r-1, c-1));
+        assertEquals(StateRule.DEAD, grid.get(r-1, c));
+        assertEquals(StateRule.DEAD, grid.get(r-1, c+1));
+        assertEquals(alive, grid.get(r, c-1));
+        assertEquals(alive, grid.get(r, c));
+        assertEquals(alive, grid.get(r, c+1));
+        assertEquals(StateRule.DEAD, grid.get(r+1, c-1));
+        assertEquals(StateRule.DEAD, grid.get(r+1, c));
+        assertEquals(StateRule.DEAD, grid.get(r+1, c+1));
 
-        golEval.eval(grid);
+        grid.eval(gameOfLife);
 
         // vertical 3len blinker
-        assertEquals(StateRule.DEAD, grid.get(center.row-1, center.col-1));
-        assertEquals(alive, grid.get(center.row-1, center.col));
-        assertEquals(StateRule.DEAD, grid.get(center.row-1, center.col+1));
-        assertEquals(StateRule.DEAD, grid.get(center.row, center.col-1));
-        assertEquals(alive, grid.get(center.row, center.col));
-        assertEquals(StateRule.DEAD, grid.get(center.row, center.col+1));
-        assertEquals(StateRule.DEAD, grid.get(center.row+1, center.col-1));
-        assertEquals(alive, grid.get(center.row+1, center.col));
-        assertEquals(StateRule.DEAD, grid.get(center.row+1, center.col+1));
+        assertEquals(StateRule.DEAD, grid.get(r-1, c-1));
+        assertEquals(alive, grid.get(r-1, c));
+        assertEquals(StateRule.DEAD, grid.get(r-1, c+1));
+        assertEquals(StateRule.DEAD, grid.get(r, c-1));
+        assertEquals(alive, grid.get(r, c));
+        assertEquals(StateRule.DEAD, grid.get(r, c+1));
+        assertEquals(StateRule.DEAD, grid.get(r+1, c-1));
+        assertEquals(alive, grid.get(r+1, c));
+        assertEquals(StateRule.DEAD, grid.get(r+1, c+1));
     }
 }

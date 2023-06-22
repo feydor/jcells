@@ -22,10 +22,10 @@ public class GameOfLifeRule implements StateRule {
 
     @Override
     public int apply(Cell cell, Neighbors neighbors) {
-        int neighborsAlive = neighbors.countIf(c -> alive == c.value);
-        if (cell.value == alive && (neighborsAlive == 2 || neighborsAlive == 3)) {
+        int neighborsAlive = neighbors.countIf(c -> alive == c.value());
+        if (cell.value() == alive && (neighborsAlive == 2 || neighborsAlive == 3)) {
             return alive;
-        } else if (cell.value == DEAD && neighborsAlive == 3) {
+        } else if (cell.value() == DEAD && neighborsAlive == 3) {
             return alive;
         } else {
             return DEAD;

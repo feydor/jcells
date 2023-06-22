@@ -1,5 +1,6 @@
 package org.fffere.jcell.view;
 
+/** Holds resource filepaths */
 public class ResourceConstants {
     public static final String EXAMPLES_DIR = "./examples";
     public static final String IMAGES_DIR = "./images";

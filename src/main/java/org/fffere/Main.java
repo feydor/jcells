@@ -2,21 +2,18 @@ package org.fffere;
 
 import org.fffere.jcell.GridEnvironment;
 import org.fffere.jcell.view.JCellsFrame;
-import org.fffere.jcell.view.ResourceConstants;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
     static final int NROWS = 100;
     static final int NCOLS = 100;
     static final int INTERVAL = 60;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         var file = new File("./examples/spacefiller.rle");
         var gridEnvironment = new GridEnvironment(file, NROWS, NCOLS);
 

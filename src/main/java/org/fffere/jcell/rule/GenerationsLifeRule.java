@@ -25,23 +25,23 @@ public class GenerationsLifeRule implements StateRule {
 
     @Override
     public int apply(Cell cell, Neighbors neighbors) {
-        int neighborsInStateOne = neighbors.countIf(c -> states[0] == c.value);
-        if (cell.value == DEAD) {
+        int neighborsInStateOne = neighbors.countIf(c -> states[0] == c.value());
+        if (cell.value() == DEAD) {
             var found = Arrays.stream(birthConditions).filter(b -> b == neighborsInStateOne).findAny();
             return found.isPresent() ? states[0] : DEAD;
         }
 
-        if (cell.value == states[0]) {
+        if (cell.value() == states[0]) {
             var found = Arrays.stream(surviveConditions).filter(s -> s == neighborsInStateOne).findAny();
             return found.isPresent() ? states[0] : states[1];
         } else {
             // get the cell's state
             int state = -1;
             for (int i=0; i<states.length; ++i)
-                if (states[i] == cell.value)
+                if (states[i] == cell.value())
                     state = i;
             if (state < 0)
-                throw new IllegalArgumentException("Cell was found with invalid value=" + Integer.toHexString(cell.value));
+                throw new IllegalArgumentException("Cell was found with invalid value=" + Integer.toHexString(cell.value()));
 
             // last state wraps around to dead
             if (state == states.length-1) {

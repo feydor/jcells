@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
+/** The main frame */
 public class JCellsFrame extends JFrame {
     private final GridEnvironment gEnv;
     private final JButton openButton;
@@ -52,7 +53,7 @@ public class JCellsFrame extends JFrame {
         menuBar.add(openButton);
 
         dropdown = new JComboBox<>(new DefaultComboBoxModel<>());
-        var ruleNames = Arrays.stream(gEnv.getAllCurrentRules())
+        var ruleNames = Arrays.stream(gEnv.getAllRules())
                 .map(r -> RleFile.displayName(r.name(), r.ruleString())).toList();
         for (var name : ruleNames)
             dropdown.addItem(name);

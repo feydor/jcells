@@ -1,7 +1,6 @@
 package org.fffere.jcell;
 
 import org.fffere.jcell.model.Grid;
-import org.fffere.jcell.model.GridEvaluator;
 import org.fffere.jcell.parser.RleFile;
 import org.fffere.jcell.parser.RleParser;
 import org.fffere.jcell.rule.StateRule;
@@ -11,25 +10,15 @@ import org.fffere.jcell.util.Pair;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /** Manages all Grid-related state */
 public class GridEnvironment {
     private Grid grid;
     private Grid savedGrid;
-    private final GridEvaluator gridEvaluator;
+    private StateRule currentStateRule;
     private RleFile currentRleFile;
     private final StateRulesDb stateRulesDb;
     private boolean running = false;
-
-    public GridEnvironment(Grid initialGrid, GridEvaluator gridEvaluator, StateRulesDb stateRulesDb, RleFile initialRleFile) {
-        grid = initialGrid;
-        savedGrid = initialGrid;
-        this.gridEvaluator = gridEvaluator;
-        this.stateRulesDb = stateRulesDb;
-        currentRleFile = initialRleFile;
-    }
 
     public GridEnvironment(File patternFile, int nrows, int ncols) {
         // TODO: Only parses RLE files for now
@@ -46,10 +35,10 @@ public class GridEnvironment {
         currentRleFile = parsed.second();
         stateRulesDb = new StateRulesDb();
         Pair<StateRule, Boolean> res = stateRulesDb.fromParsedFile(currentRleFile);
-        gridEvaluator = new GridEvaluator(res.first());
+        currentStateRule = res.first();
     }
 
-    public StateRule[] getAllCurrentRules() {
+    public StateRule[] getAllRules() {
         return stateRulesDb.getAllRules();
     }
 
@@ -72,7 +61,7 @@ public class GridEnvironment {
         savedGrid = grid.clone();
         currentRleFile = parsed.second();
         Pair<StateRule, Boolean> res = stateRulesDb.fromParsedFile(currentRleFile);
-        gridEvaluator.setStateRule(res.first());
+        currentStateRule = res.first();
         return Optional.ofNullable(res.second() ? currentRleFile : null);
     }
 
@@ -82,10 +71,10 @@ public class GridEnvironment {
      * @throws IllegalArgumentException When a rule with the given name is NOT found
      */
     public void changeRule(String ruleString) {
-        StateRule rule = stateRulesDb.findByRuleString(ruleString)
+        var rule = stateRulesDb.findByRuleString(ruleString)
                 .orElseThrow(() -> new IllegalArgumentException("Rule with ruleString '" + ruleString  + "' was NOT found!"));
         System.out.println("Changing to rule: " + rule.name());
-        gridEvaluator.setStateRule(rule);
+        currentStateRule = rule;
     }
 
     public Grid grid() { return grid; }
@@ -95,21 +84,9 @@ public class GridEnvironment {
         grid = savedGrid.clone();
     }
 
+    /** Run a single eval */
     public void run() {
-        gridEvaluator.eval(grid);
-    }
-
-    public void startRunning(int interval) {
-        System.out.println("Starting run at interval: " + interval);
-        var task = new TimerTask() {
-            @Override
-            public void run() {
-                if (running) run();
-            }
-        };
-        var timer = new Timer();
-        timer.scheduleAtFixedRate(task, 0, interval);
-        running = true;
+        grid.eval(currentStateRule);
     }
 
     public void toggleRunning() {

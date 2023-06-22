@@ -20,7 +20,7 @@ class NeighborsTest {
                 new Cell(0, 0, value)
         });
 
-        int res = neighbors.countIf(cell -> cell.value == value);
+        int res = neighbors.countIf(cell -> cell.value() == value);
         assertEquals(7, res);
     }
 }

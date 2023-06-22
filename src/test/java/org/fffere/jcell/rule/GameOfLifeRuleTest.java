@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameOfLifeRuleTest {
     static final int ALIVE = 0x0000FF;
-    GameOfLifeRule gameOfLifeRule = new GameOfLifeRule(ALIVE);
+    final GameOfLifeRule gameOfLifeRule = new GameOfLifeRule(ALIVE);
 
     @Test
     void testSingleCell() {
@@ -38,20 +38,19 @@ class GameOfLifeRuleTest {
         assertEquals(StateRule.DEAD, res);
     }
 
+    /** Get a full set of neighbors (8) with nAlive being ALIVE */
     private Neighbors getTestNeighbors(int nAlive) {
-        var cells = new Cell[]{
-                new Cell(0, 0),
-                new Cell(0, 0),
-                new Cell(0, 0),
-                new Cell(0, 0),
-                new Cell(0, 0),
-                new Cell(0, 0),
-                new Cell(0, 0),
-                new Cell(0, 0)
-        };
+        var cells = new Cell[8];
 
-        for (int i=0; i<nAlive; ++i) {
-            cells[i].value = ALIVE;
+        // Set the first nAlive to ALIVE
+        int i;
+        for (i=0; i<nAlive; ++i) {
+            cells[i] = new Cell(0, 0, ALIVE);
+        }
+
+        // The rest are dead by default
+        for (int j=i; j<cells.length; ++j) {
+            cells[j] = new Cell(0, 0);
         }
 
         return new Neighbors(cells);

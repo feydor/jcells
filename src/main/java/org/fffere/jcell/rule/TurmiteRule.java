@@ -14,11 +14,11 @@ import java.util.concurrent.ThreadLocalRandom;
  * </ol>
  */
 public class TurmiteRule implements StateRule {
-    ThreadLocalRandom random = ThreadLocalRandom.current();
+    private static final ThreadLocalRandom random = ThreadLocalRandom.current();
 
     @Override
     public int apply(Cell cell, Neighbors neighbors) {
-        if (cell.value == DEAD) return DEAD;
+        if (cell.value() == DEAD) return DEAD;
         int direction = random.nextInt(0, 4);
         int randomColor = random.nextInt(0, 0xFFFF0F);
         throw new IllegalArgumentException("Unimplemented!");

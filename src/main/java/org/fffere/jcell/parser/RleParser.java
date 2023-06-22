@@ -13,6 +13,7 @@ import java.util.List;
 /** Load a grid from a rle file */
 public class RleParser {
 
+    /** Parse a Grid from a patterns file */
     public static Pair<Grid, RleFile> parse(File file, int ncols, int nrows, int alive, int dead) throws IOException {
         var ext = file.getName().split("\\.")[1];
         if (!ext.equalsIgnoreCase("rle"))

@@ -7,7 +7,7 @@ A system for evaluating [Life-like cellular automata](https://conwaylife.com/wik
 
 ## Features
 - Parses [RLE](https://conwaylife.com/wiki/Run_Length_Encoded) (extended run-length encoded) pattern files
-- Realtime rule switching
+- Realtime rule switching, reset, pause
 
 ## TODO
 1. ~~Parse [RLE](https://conwaylife.com/wiki/Run_Length_Encoded) format~~
@@ -18,5 +18,5 @@ A system for evaluating [Life-like cellular automata](https://conwaylife.com/wik
 4. Allow non-Life rules like [Turmite](https://en.wikipedia.org/wiki/Turmite) that look at groups of cells at a time
     + As an idea, maybe pass in a living cell and its neighboring cells and determine their state at the same time?
 5. ~~Dropdown menu to switch between multiple preset rules~~
-6. Reset button
+6. ~~Reset button~~
 7. Parse mc (macrocell) files

@@ -2,8 +2,12 @@ package org.fffere.jcell.parser;
 
 import java.util.List;
 
+record RleData(int runCount, RleTag tag) {
+}
+
 /** Representation of a Life-like pattern file */
-public record RleFile(String fileName, String ruleString, int x, int y, int[] birthConditions, int[] surviveConditions, List<RleData> data) {
+public record RleFile(String fileName, String ruleString, int x, int y, int[] birthConditions,
+                      int[] surviveConditions, List<RleData> data) {
     /** Pretty print the name and rule string */
     public String displayName() {
         return displayName(fileName, ruleString);
