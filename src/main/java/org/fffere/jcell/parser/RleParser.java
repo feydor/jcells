@@ -96,7 +96,8 @@ public class RleParser {
             }
         }
 
-        return new Pair<>(grid, new RleFile(ruleStr, x, y, birthConditions, surviveConditions, rleData));
+        return new Pair<>(grid, new RleFile(file.getName().split("\\.")[0], ruleStr, x, y, birthConditions,
+                surviveConditions, rleData));
     }
 
     /**

@@ -10,8 +10,9 @@ public class GenerationsLifeRule implements StateRule {
     private final int[] surviveConditions;
     private final int[] states;
     private final String name;
+    private final String ruleString;
 
-    public GenerationsLifeRule(int[] birthConditions, int[] surviveConditions, int[] states, String name) {
+    public GenerationsLifeRule(int[] birthConditions, int[] surviveConditions, int[] states, String name, String ruleString) {
         if (birthConditions.length < 1) throw new IllegalArgumentException("Birth condition must be greater than 1.");
         if (surviveConditions.length < 1) throw new IllegalArgumentException("Survive condition is invalid.");
         if (states.length < 1) throw new IllegalArgumentException("Generations must have at least 1 value.");
@@ -19,6 +20,7 @@ public class GenerationsLifeRule implements StateRule {
         this.surviveConditions = surviveConditions;
         this.states = states;
         this.name = name;
+        this.ruleString = ruleString;
     }
 
     @Override
@@ -69,5 +71,10 @@ public class GenerationsLifeRule implements StateRule {
     @Override
     public String name() {
         return name;
+    }
+
+    @Override
+    public String ruleString() {
+        return ruleString;
     }
 }

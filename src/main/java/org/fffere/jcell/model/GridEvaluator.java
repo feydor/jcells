@@ -72,8 +72,4 @@ public class GridEvaluator {
     public void setStateRule(StateRule stateRule) {
         this.stateRule = stateRule;
     }
-
-    public StateRule getStateRule() {
-        return stateRule;
-    }
 }

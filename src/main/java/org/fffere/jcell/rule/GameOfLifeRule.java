@@ -36,4 +36,9 @@ public class GameOfLifeRule implements StateRule {
     public String name() {
         return "Game of Life";
     }
+
+    @Override
+    public String ruleString() {
+        return "B3/S23";
+    }
 }

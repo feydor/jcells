@@ -1,9 +1,13 @@
 # JCells
-A system for evaluating Life-like cellular automata
+A system for evaluating [Life-like cellular automata](https://conwaylife.com/wiki/Life-like_cellular_automaton)
 
 `./gradlew run`
 
 ![animation](./images/Animation.gif)
+
+## Features
+- Parses [RLE](https://conwaylife.com/wiki/Run_Length_Encoded) (extended run-length encoded) pattern files
+- Realtime rule switching
 
 ## TODO
 1. ~~Parse [RLE](https://conwaylife.com/wiki/Run_Length_Encoded) format~~
@@ -15,3 +19,4 @@ A system for evaluating Life-like cellular automata
     + As an idea, maybe pass in a living cell and its neighboring cells and determine their state at the same time?
 5. ~~Dropdown menu to switch between multiple preset rules~~
 6. Reset button
+7. Parse mc (macrocell) files

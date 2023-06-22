@@ -28,4 +28,9 @@ public class TurmiteRule implements StateRule {
     public String name() {
         return "Turmite";
     }
+
+    @Override
+    public String ruleString() {
+        return "Turmite";
+    }
 }

@@ -8,4 +8,5 @@ public interface StateRule {
 
     int apply(Cell cell, Neighbors neighbors);
     String name();
+    String ruleString();
 }

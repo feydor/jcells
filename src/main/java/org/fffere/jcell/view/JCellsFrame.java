@@ -1,23 +1,22 @@
 package org.fffere.jcell.view;
 
-import org.fffere.jcell.rule.StateRule;
-import org.fffere.jcell.rule.StateRulesDb;
+import org.fffere.jcell.GridEnvironment;
+import org.fffere.jcell.parser.RleFile;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
+import java.util.Arrays;
 
 public class JCellsFrame extends JFrame {
-    private final GridPane gridPanel;
+    private final GridEnvironment gEnv;
     private final JButton openButton;
     private final JComboBox<String> dropdown;
     private final JFileChooser fileChooser = new JFileChooser(ResourceConstants.EXAMPLES_DIR);
-    private final static String[] RULE_NAMES = StateRulesDb.ALL_RULES.stream().map(StateRule::name).toList().toArray(new String[]{});
 
-    public JCellsFrame(GridPane gridPane, Component[] menuItems) {
-        this.gridPanel = gridPane;
+    public JCellsFrame(GridEnvironment gridEnvironment) {
+        this.gEnv = gridEnvironment;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("JCells");
 
@@ -26,21 +25,42 @@ public class JCellsFrame extends JFrame {
         menuLayout.setAlignment(FlowLayout.LEFT);
         menuBar.setLayout(menuLayout);
         setJMenuBar(menuBar);
-        for (var mi : menuItems)
-            menuBar.add(mi);
 
-        openButton = new JButton("Open a pattern...",
-                new ImageIcon(ResourceConstants.IMG_OPEN_FILE));
+        var playButton = new JButton("Play", new ImageIcon(ResourceConstants.IMG_PLAY));
+        playButton.addActionListener(e -> {
+            gEnv.toggleRunning();
+            repaint();
+        });
+        menuBar.add(playButton);
+
+        var advanceButton = new JButton("Advance", new ImageIcon(ResourceConstants.IMG_RIGHT_ARROW));
+        advanceButton.addActionListener(e -> {
+            gridEnvironment.run();
+            repaint();
+        });
+        menuBar.add(advanceButton);
+
+        var resetButton = new JButton("Reset");
+        resetButton.addActionListener(e -> {
+            gEnv.resetState();
+            repaint();
+        });
+        menuBar.add(resetButton);
+
+        openButton = new JButton("Open a pattern...", new ImageIcon(ResourceConstants.IMG_OPEN_FILE));
         openButton.addActionListener(this::handleFileOpenButton);
         menuBar.add(openButton);
 
         dropdown = new JComboBox<>(new DefaultComboBoxModel<>());
-        for (var name : RULE_NAMES)
+        var ruleNames = Arrays.stream(gEnv.getAllCurrentRules())
+                .map(r -> RleFile.displayName(r.name(), r.ruleString())).toList();
+        for (var name : ruleNames)
             dropdown.addItem(name);
-        dropdown.setSelectedIndex(RULE_NAMES.length-1);
+        dropdown.setSelectedIndex(0);
         dropdown.addActionListener(e -> {
-            String rule = (String) dropdown.getSelectedItem();
-            gridPanel.changeRule(StateRulesDb.find(rule));
+            String ruleDisplayName = (String) dropdown.getSelectedItem();
+            assert ruleDisplayName != null;
+            gEnv.changeRule(RleFile.extractRuleStringFromDisplayName(ruleDisplayName));
         });
         menuBar.add(new JLabel("Rule: "));
         menuBar.add(dropdown);
@@ -50,7 +70,7 @@ public class JCellsFrame extends JFrame {
         mainPane.setBorder(new EmptyBorder(margins, margins, margins, margins));
         getContentPane().add(mainPane);
 
-        mainPane.add(gridPane, BorderLayout.CENTER);
+        mainPane.add(new GridPane(gEnv), BorderLayout.CENTER);
 
         pack();
         setLocationRelativeTo(null);
@@ -63,15 +83,14 @@ public class JCellsFrame extends JFrame {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 var file = fileChooser.getSelectedFile();
-                try {
-                    System.out.println("Opening: " + file.getName());
-                    var parsedFile = gridPanel.loadPatternFile(file);
-                    dropdown.addItem(parsedFile.ruleString());
-                    dropdown.setSelectedItem(parsedFile.ruleString());
-                } catch (IOException ex) {
-                    System.out.println("Error opening file '" + file + "'");
-                    ex.printStackTrace();
+                System.out.println("Opening: " + file.getName());
+                var optPatternFile = gEnv.loadPatternFile(file);
+                if (optPatternFile.isPresent()) {
+                    var patternFile = optPatternFile.get();
+                    dropdown.addItem(patternFile.displayName());
+                    dropdown.setSelectedItem(patternFile.displayName());
                 }
+                repaint();
             } else {
                 System.out.println("Open command cancelled by user");
             }
