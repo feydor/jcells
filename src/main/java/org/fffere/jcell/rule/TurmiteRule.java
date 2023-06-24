@@ -1,7 +1,8 @@
 package org.fffere.jcell.rule;
 
 import org.fffere.jcell.model.Cell;
-import org.fffere.jcell.model.Neighbors;
+import org.fffere.jcell.model.Grid;
+import org.fffere.jcell.util.Coordinate;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -14,14 +15,32 @@ import java.util.concurrent.ThreadLocalRandom;
  * </ol>
  */
 public class TurmiteRule implements StateRule {
-    private static final ThreadLocalRandom random = ThreadLocalRandom.current();
+    private final int alive;
+    private final Turmite turmite;
+
+    public TurmiteRule(int row, int col, int alive) {
+        this.alive = alive;
+        int dir = ThreadLocalRandom.current().nextInt(0, 4);
+        turmite = new Turmite(0xFF0000, dir * 90, row, col);
+    }
 
     @Override
-    public int apply(Cell cell, Neighbors neighbors) {
-        if (cell.value() == DEAD) return DEAD;
-        int direction = random.nextInt(0, 4);
-        int randomColor = random.nextInt(0, 0xFFFF0F);
-        throw new IllegalArgumentException("Unimplemented!");
+    public Grid eval(Grid currentState) {
+        if (turmite.bounds() == null)
+            turmite.setBounds(new Coordinate(currentState.height, currentState.width));
+
+        int cell = currentState.get(turmite.row(), turmite.col());
+        if (cell == StateRule.DEAD) {
+            currentState.set(turmite.row(), turmite.col(), alive);
+            turmite.turnClockwise(90);
+            turmite.moveForward();
+        } else {
+            currentState.set(turmite.row(), turmite.col(), StateRule.DEAD);
+            turmite.turnCounterClockwise(90);
+            turmite.moveForward();
+        }
+        currentState.overlay = new Cell(turmite.row(), turmite.col(), turmite.color());
+        return currentState;
     }
 
     @Override
@@ -31,6 +50,6 @@ public class TurmiteRule implements StateRule {
 
     @Override
     public String ruleString() {
-        return "Turmite";
+        return "B1/S?";
     }
 }

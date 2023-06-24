@@ -1,6 +1,7 @@
 package org.fffere.jcell.rule;
 
 import org.fffere.jcell.model.Cell;
+import org.fffere.jcell.model.Grid;
 import org.fffere.jcell.model.Neighbors;
 
 /**
@@ -21,6 +22,10 @@ public class GameOfLifeRule implements StateRule {
     }
 
     @Override
+    public Grid eval(Grid currentState) {
+        return StateRule.cellByCellEval(currentState, this::apply);
+    }
+
     public int apply(Cell cell, Neighbors neighbors) {
         int neighborsAlive = neighbors.countIf(c -> alive == c.value());
         if (cell.value() == alive && (neighborsAlive == 2 || neighborsAlive == 3)) {

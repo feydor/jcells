@@ -98,7 +98,7 @@ class GridTest {
         grid.set(r, c, alive);
         grid.set(r+1, c, alive);
 
-        grid.eval(gameOfLife);
+        grid = gameOfLife.eval(grid);
 
         // horizontal 3len blinker
         assertEquals(StateRule.DEAD, grid.get(r-1, c-1));
@@ -111,7 +111,7 @@ class GridTest {
         assertEquals(StateRule.DEAD, grid.get(r+1, c));
         assertEquals(StateRule.DEAD, grid.get(r+1, c+1));
 
-        grid.eval(gameOfLife);
+        grid = gameOfLife.eval(grid);
 
         // vertical 3len blinker
         assertEquals(StateRule.DEAD, grid.get(r-1, c-1));

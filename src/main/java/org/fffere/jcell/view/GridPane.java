@@ -7,6 +7,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.util.Objects;
 
 /** Draws the Grid */
 public class GridPane extends JPanel {
@@ -33,7 +34,9 @@ public class GridPane extends JPanel {
         for (int i=0; i<gEnv.grid().height; ++i) {
             for (int j=0; j<gEnv.grid().width; ++j) {
                 int rgb = gEnv.grid().get(j, i);
-                g.setColor(new Color(rgb));
+
+                var overlay = gEnv.grid().getOverlay(j, i);
+                g.setColor(new Color(Objects.requireNonNullElse(overlay, rgb)));
 
                 int x = i * CELL_SIZE;
                 int y = j * CELL_SIZE;

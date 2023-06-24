@@ -1,6 +1,7 @@
 package org.fffere.jcell.rule;
 
 import org.fffere.jcell.model.Cell;
+import org.fffere.jcell.model.Grid;
 import org.fffere.jcell.model.Neighbors;
 
 import java.util.Arrays;
@@ -24,6 +25,10 @@ public class GenerationsLifeRule implements StateRule {
     }
 
     @Override
+    public Grid eval(Grid currentState) {
+        return StateRule.cellByCellEval(currentState, this::apply);
+    }
+
     public int apply(Cell cell, Neighbors neighbors) {
         int neighborsInStateOne = neighbors.countIf(c -> states[0] == c.value());
         if (cell.value() == DEAD) {

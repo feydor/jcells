@@ -1,5 +1,6 @@
 package org.fffere;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
 import org.fffere.jcell.GridEnvironment;
 import org.fffere.jcell.view.JCellsFrame;
 
@@ -35,13 +36,12 @@ public class Main {
     }
 
     private static void initLookAndFeel() {
-        JFrame.setDefaultLookAndFeelDecorated(true);
         try {
-            UIManager.setLookAndFeel(
-                    UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(new FlatDarculaLaf());
         } catch (Exception ex) {
             System.out.println(ex.getLocalizedMessage());
             ex.printStackTrace();
         }
+//        JFrame.setDefaultLookAndFeelDecorated(true);
     }
 }

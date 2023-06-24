@@ -1,6 +1,5 @@
 package org.fffere.jcell.model;
 
-import org.fffere.jcell.rule.StateRule;
 import org.fffere.jcell.rule.StateRulesDb;
 
 public class Grid implements Cloneable {
@@ -8,6 +7,7 @@ public class Grid implements Cloneable {
     public static final int DEFAULT = StateRulesDb.DEAD;
     public final int width;
     public final int height;
+    public Cell overlay;
 
     public Grid(int width, int height) {
         grid = new int[width][height];
@@ -26,21 +26,6 @@ public class Grid implements Cloneable {
 
     public int get(int row, int col) {
         return grid[col][row];
-    }
-
-    /** Evaluate a single round using the given state rule */
-    public void eval(StateRule stateRule) {
-        Grid nextState = new Grid(width, height);
-        for (int row=0; row<height; ++row) {
-            for (int col=0; col<width; ++col) {
-                var cell = new Cell(row, col, get(row, col));
-                var neighbors = getNeighbors(row, col);
-                int nextValue = stateRule.apply(cell, neighbors);
-                nextState.set(row, col, nextValue);
-            }
-        }
-
-        grid = nextState.grid;
     }
 
     /** Get the Moore neighborhood of a cell. The surrounding cells with wrap-around. */
@@ -118,5 +103,10 @@ public class Grid implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    /** returns the overlay if the given coordinate has an active overlay for it, otherwise null */
+    public Integer getOverlay(int j, int i) {
+        return overlay != null && overlay.hasCoordinate(j, i) ? overlay.value() : null;
     }
 }

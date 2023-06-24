@@ -86,7 +86,7 @@ public class GridEnvironment {
 
     /** Run a single eval */
     public void run() {
-        grid.eval(currentStateRule);
+        grid = currentStateRule.eval(grid);
     }
 
     public void toggleRunning() {
