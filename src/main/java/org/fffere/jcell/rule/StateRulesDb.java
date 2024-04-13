@@ -1,33 +1,24 @@
 package org.fffere.jcell.rule;
 
-import org.fffere.jcell.parser.RleFile;
-import org.fffere.jcell.util.Pair;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /** Manages the current StateRules */
 public class StateRulesDb {
-    public static final int[] STATES = new int[]{
-            0x000000, 0x1f0c03, 0x3b1408, 0x65190c, 0x981b0c, 0xcb1509
-    };
-    public static final int ALIVE = STATES[0];
-    public static final int DEAD = 0xFFFFFF;
 
-    public static final StateRule GAME_OF_LIFE = new GameOfLifeRule(ALIVE);
-    public static final StateRule STAR_WARS = new GenerationsLifeRule(new int[]{2}, new int[]{3, 4, 5},
-            Arrays.stream(STATES).sequential().limit(4).toArray(),
-            "Star Wars", "B2/S345/4");
-    public static final StateRule TURMITE = new TurmiteRule(1, 1, ALIVE);
+    public static final StateRule GAME_OF_LIFE = new GenerationsLifeRule(
+            new RuleString(new int[]{3}, new int[]{2, 3}, 2, "Game Of Life", RuleString.NeighborhoodType.MOORE)
+    );
+    public static final StateRule STAR_WARS = new GenerationsLifeRule(
+            new RuleString(new int[]{2}, new int[]{3, 4, 5}, 4, "Star Wars", RuleString.NeighborhoodType.MOORE)
+    );
+    public static final StateRule TURMITE = new TurmiteRule(1, 1, 1);
 
-    public final List<StateRule> allRules = new ArrayList<>();
+    private final Map<RuleString, StateRule> stateRules = new HashMap<>();
 
     public StateRulesDb() {
-        allRules.add(GAME_OF_LIFE);
-        allRules.add(STAR_WARS);
-        allRules.add(TURMITE);
+        stateRules.put(GAME_OF_LIFE.getRuleString(), GAME_OF_LIFE);
+        stateRules.put(STAR_WARS.getRuleString(), STAR_WARS);
+        stateRules.put(TURMITE.getRuleString(), TURMITE);
     }
 
     /**
@@ -36,27 +27,22 @@ public class StateRulesDb {
      * @return the rule
      * @throws IllegalArgumentException when not found
      */
-    public Optional<StateRule> findByRuleString(String ruleString) {
-        return allRules.stream().filter(r -> r.ruleString().equalsIgnoreCase(ruleString)).findAny();
+    public Optional<StateRule> findByRuleString(RuleString ruleString) {
+        return Optional.ofNullable(stateRules.get(ruleString));
     }
 
     public StateRule[] getAllRules() {
-        return allRules.toArray(allRules.toArray(new StateRule[0]));
+        return stateRules.values().toArray(new StateRule[0]);
     }
 
     /**
-     * Creates and adds a StateRule from a pattern file. If it is already in the DB, then returns it and false.
-     * @param rleFile the pattern file
-     * @return True if the StateRule is new, false otherwese
+     * @return true if created
      */
-    public Pair<StateRule, Boolean> fromParsedFile(RleFile rleFile) {
-        var found = allRules.stream().filter(rule -> rule.ruleString().equalsIgnoreCase(rleFile.ruleString())).findAny();
-        if (found.isPresent())
-            return new Pair<>(found.get(), false);
+    public boolean createStateRule(RuleString ruleString) {
+        if (findByRuleString(ruleString).isPresent())
+            return false;
 
-        var newRule = new GenerationsLifeRule(rleFile.birthConditions(), rleFile.surviveConditions(),
-                STATES, rleFile.fileName(), rleFile.ruleString());
-        allRules.add(newRule);
-        return new Pair<>(newRule, true);
+        stateRules.put(ruleString, new GenerationsLifeRule(ruleString));
+        return true;
     }
 }

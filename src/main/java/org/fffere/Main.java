@@ -6,16 +6,18 @@ import org.fffere.jcell.view.JCellsFrame;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Main {
     static final int NROWS = 100;
     static final int NCOLS = 100;
-    static final int INTERVAL = 60;
+    static final int PERIOD_MS = 60;
+    static final String INITIAL_PATTERN_FILE = "./examples/spacefiller.rle";
 
-    public static void main(String[] args) {
-        var file = new File("./examples/spacefiller.rle");
+    public static void main(String[] args) throws IOException {
+        var file = new File(INITIAL_PATTERN_FILE);
         var gridEnvironment = new GridEnvironment(file, NROWS, NCOLS);
 
         initLookAndFeel();
@@ -31,7 +33,7 @@ public class Main {
                 }
             };
             var timer = new Timer();
-            timer.scheduleAtFixedRate(task, 0, INTERVAL);
+            timer.scheduleAtFixedRate(task, 0, PERIOD_MS);
         });
     }
 
@@ -40,7 +42,7 @@ public class Main {
             UIManager.setLookAndFeel(new FlatDarculaLaf());
         } catch (Exception ex) {
             System.out.println(ex.getLocalizedMessage());
-            ex.printStackTrace();
+            ex.printStackTrace(System.err);
         }
 //        JFrame.setDefaultLookAndFeelDecorated(true);
     }

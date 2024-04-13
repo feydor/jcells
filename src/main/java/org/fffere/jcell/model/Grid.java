@@ -1,13 +1,49 @@
 package org.fffere.jcell.model;
 
-import org.fffere.jcell.rule.StateRulesDb;
+import org.fffere.jcell.parser.RleData;
+import org.fffere.jcell.parser.RleFile;
+import org.fffere.jcell.parser.RleTag;
+
 
 public class Grid implements Cloneable {
     protected int[][] grid;
-    public static final int DEFAULT = StateRulesDb.DEAD;
+    public static final int DEFAULT = 0;
     public final int width;
     public final int height;
     public Cell overlay;
+
+    public Grid(int width, int height, RleFile rle) {
+        // Begin setting up grid, start in the relative middle
+//        int startr = width/2 - rle.y()/2, startc = height/2 - rle.x()/2;
+        int startr = 1;
+        int startc = 1;
+        if (startr + rle.y() >= height)
+            throw new IllegalArgumentException("Grid width must be large enough to hold figure of y=" + rle.y());
+        else if (startc + rle.x() >= width)
+            throw new IllegalArgumentException("Grid height must be large enough to hold figure of x=" + rle.x());
+
+        this.width = width;
+        this.height = height;
+        grid = new int[width][height];
+        int r = startr, c = startc;
+        for (RleData data : rle.data()) {
+            if (data.tag() == RleTag.EOL) {
+                // set the rest of columns in the row to dead
+                // and advance to next line
+                while (c < width) {
+                    set(r, c++, 0);
+                }
+                ++r;
+                c = startc;
+                continue;
+            }
+
+            // fill in columns based on rle data
+            for (int i=0; i<data.runCount(); ++i) {
+                set(r, c++, data.tag() == RleTag.ALIVE ? 1 : 0);
+            }
+        }
+    }
 
     public Grid(int width, int height) {
         grid = new int[width][height];
@@ -74,20 +110,6 @@ public class Grid implements Cloneable {
         return new Neighbors(neighbors);
     }
 
-
-    @Override
-    public String toString() {
-        var sb = new StringBuilder();
-        for (int i=0; i<height; ++i) {
-            for (int j=0; j<width; ++j) {
-                var box = grid[j][i] == DEFAULT ? "□" : "■";
-                sb.append(box);
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
-
     @Override
     public Grid clone() {
         try {
@@ -108,5 +130,14 @@ public class Grid implements Cloneable {
     /** returns the overlay if the given coordinate has an active overlay for it, otherwise null */
     public Integer getOverlay(int j, int i) {
         return overlay != null && overlay.hasCoordinate(j, i) ? overlay.value() : null;
+    }
+
+    public void truncateValues(int maxValue) {
+        for (int i=0; i<height; ++i) {
+            for (int j=0; j<width; ++j) {
+                if (grid[j][i] > maxValue)
+                    grid[j][i] = maxValue;
+            }
+        }
     }
 }

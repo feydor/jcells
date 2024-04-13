@@ -7,13 +7,11 @@ import org.fffere.jcell.model.Neighbors;
 import java.util.function.BiFunction;
 
 public interface StateRule {
-    int DEAD = StateRulesDb.DEAD;
+    int DEAD = 0;
 
     /** Generates the next state */
     Grid eval(Grid currentState);
-    String name();
-    String ruleString();
-
+    String getName();
     /**
      * Evaluate the next state by iterating across the cells and its neighbors
      * @param grid the grid state
@@ -32,4 +30,8 @@ public interface StateRule {
         }
         return nextState;
     }
+
+    int getNumStates();
+
+    RuleString getRuleString();
 }

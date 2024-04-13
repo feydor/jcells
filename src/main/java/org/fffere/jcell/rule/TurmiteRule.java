@@ -6,6 +6,8 @@ import org.fffere.jcell.util.Coordinate;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import static org.fffere.jcell.rule.RuleString.NeighborhoodType.MOORE;
+
 /**
  * Turmite:
  * <ol>
@@ -17,11 +19,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public class TurmiteRule implements StateRule {
     private final int alive;
     private final Turmite turmite;
+    private final RuleString ruleString;
 
     public TurmiteRule(int row, int col, int alive) {
         this.alive = alive;
         int dir = ThreadLocalRandom.current().nextInt(0, 4);
         turmite = new Turmite(0xFF0000, dir * 90, row, col);
+        ruleString = new RuleString(new int[]{0}, new int[]{0}, 2, "Termite", MOORE);
     }
 
     @Override
@@ -44,12 +48,17 @@ public class TurmiteRule implements StateRule {
     }
 
     @Override
-    public String name() {
-        return "Turmite";
+    public String getName() {
+        return ruleString.getName();
     }
 
     @Override
-    public String ruleString() {
-        return "B1/S?";
+    public int getNumStates() {
+        return ruleString.getNumStates();
+    }
+
+    @Override
+    public RuleString getRuleString() {
+        return ruleString;
     }
 }

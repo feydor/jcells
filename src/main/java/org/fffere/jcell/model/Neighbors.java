@@ -1,5 +1,6 @@
 package org.fffere.jcell.model;
 
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 /** All eight neighboring cells */

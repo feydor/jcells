@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameOfLifeRuleTest {
     static final int ALIVE = 0x0000FF;
-    final GameOfLifeRule gameOfLifeRule = new GameOfLifeRule(ALIVE);
+    final GenerationsLifeRule gameOfLifeRule = (GenerationsLifeRule) StateRulesDb.GAME_OF_LIFE;
 
     @Test
     void testSingleCell() {

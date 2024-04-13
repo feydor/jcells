@@ -2,18 +2,21 @@ package org.fffere.jcell.view;
 
 import org.fffere.jcell.GridEnvironment;
 import org.fffere.jcell.parser.RleFile;
+import org.fffere.jcell.rule.RuleString;
+import org.fffere.jcell.rule.StateRule;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.Arrays;
 
 /** The main frame */
 public class JCellsFrame extends JFrame {
     private final GridEnvironment gEnv;
     private final JButton openButton;
-    private final JComboBox<String> dropdown;
+    private final JComboBox<RuleString> dropdown;
     private final JFileChooser fileChooser = new JFileChooser(ResourceConstants.EXAMPLES_DIR);
 
     public JCellsFrame(GridEnvironment gridEnvironment) {
@@ -36,7 +39,7 @@ public class JCellsFrame extends JFrame {
 
         var advanceButton = new JButton("Advance", new ImageIcon(ResourceConstants.IMG_RIGHT_ARROW));
         advanceButton.addActionListener(e -> {
-            gridEnvironment.run();
+            gEnv.run();
             repaint();
         });
         menuBar.add(advanceButton);
@@ -53,15 +56,14 @@ public class JCellsFrame extends JFrame {
         menuBar.add(openButton);
 
         dropdown = new JComboBox<>(new DefaultComboBoxModel<>());
-        var ruleNames = Arrays.stream(gEnv.getAllRules())
-                .map(r -> RleFile.displayName(r.name(), r.ruleString())).toList();
-        for (var name : ruleNames)
-            dropdown.addItem(name);
-        dropdown.setSelectedIndex(0);
+        refreshRulesDropdown(0);
+
         dropdown.addActionListener(e -> {
-            String ruleDisplayName = (String) dropdown.getSelectedItem();
-            assert ruleDisplayName != null;
-            gEnv.changeRule(RleFile.extractRuleStringFromDisplayName(ruleDisplayName));
+            if (dropdown.getItemCount() == 0)
+                return;
+            RuleString ruleString = (RuleString) dropdown.getSelectedItem();
+            assert ruleString != null;
+            gEnv.changeRule(ruleString);
         });
         menuBar.add(new JLabel("Rule: "));
         menuBar.add(dropdown);
@@ -78,6 +80,14 @@ public class JCellsFrame extends JFrame {
         setVisible(true);
     }
 
+    private void refreshRulesDropdown(int selectedIndex) {
+        dropdown.removeAllItems();
+        var ruleStrings = Arrays.stream(gEnv.getAllRules()).map(StateRule::getRuleString).toList();
+        for (var ruleString : ruleStrings)
+            dropdown.addItem(ruleString);
+        dropdown.setSelectedIndex(selectedIndex);
+    }
+
     private void handleFileOpenButton(ActionEvent e) {
         if (e.getSource() == openButton) {
             int returnVal = fileChooser.showOpenDialog(this);
@@ -85,12 +95,13 @@ public class JCellsFrame extends JFrame {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 var file = fileChooser.getSelectedFile();
                 System.out.println("Opening: " + file.getName());
-                var optPatternFile = gEnv.loadPatternFile(file);
-                if (optPatternFile.isPresent()) {
-                    var patternFile = optPatternFile.get();
-                    dropdown.addItem(patternFile.displayName());
-                    dropdown.setSelectedItem(patternFile.displayName());
+                try {
+                    gEnv.loadFromRleFile(file);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
+
+                refreshRulesDropdown(0);
                 repaint();
             } else {
                 System.out.println("Open command cancelled by user");

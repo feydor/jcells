@@ -1,7 +1,8 @@
 package org.fffere.jcell.model;
 
-import org.fffere.jcell.rule.GameOfLifeRule;
+import org.fffere.jcell.rule.GenerationsLifeRule;
 import org.fffere.jcell.rule.StateRule;
+import org.fffere.jcell.rule.StateRulesDb;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,7 +92,7 @@ class GridTest {
     void testBlinker() {
         Grid grid = new Grid(NCOLS, NROWS);
         int r = NROWS/2, c = NCOLS/2, alive = 0x0000FF;
-        StateRule gameOfLife = new GameOfLifeRule(alive);
+        StateRule gameOfLife = StateRulesDb.GAME_OF_LIFE;
 
         // vertical blinker
         grid.set(r-1, c, alive);
